@@ -37,4 +37,22 @@ data "aws_iam_policy_document" "this" {
     ]
     resources = [aws_sqs_queue.this.arn]
   }
+
+  dynamic "statement" {
+    for_each = var.cloud_connector_cross_account_id != null ? ["once"] : []
+
+    content {
+      sid    = "Allow Cloud Connector to receive and delete messages from SQS"
+      effect = "Allow"
+      principals {
+        type        = "AWS"
+        identifiers = [var.cloud_connector_cross_account_id]
+      }
+      actions = [
+        "sqs:DeleteMessage",
+        "sqs:ReceiveMessage"
+      ]
+      resources = [aws_sqs_queue.this.arn]
+    }
+  }
 }

@@ -13,6 +13,12 @@ variable "s3_event_notification_filter_prefix" {
   description = "S3 Path filter prefix for event notification. Limit the notifications to objects with key starting with specified characters"
 }
 
+variable "cloud_connector_cross_account_id" {
+  type        = string
+  description = "AWS Account Id, which need access to the sqs queue."
+  default     = null
+}
+
 #
 # general
 #

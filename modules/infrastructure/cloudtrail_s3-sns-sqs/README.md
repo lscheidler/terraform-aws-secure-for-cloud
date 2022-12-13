@@ -67,6 +67,7 @@ EVENT FILTER/fine-tunning, regarding what we want to send to Sysdig Cloud-Connec
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudtrail_s3_name"></a> [cloudtrail\_s3\_name](#input\_cloudtrail\_s3\_name) | Name of the Cloudtrail S3 bucket | `string` | n/a | yes |
+| <a name="input_cloud_connector_cross_account_id"></a> [cloud\_connector\_cross\_account\_id](#input\_cloud\_connector\_cross\_account\_id) | AWS Account Id, which need access to the sqs queue. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name to be assigned to all child resources. A suffix may be added internally when required. Use default value unless you need to install multiple instances | `string` | `"sfc"` | no |
 | <a name="input_s3_event_notification_filter_prefix"></a> [s3\_event\_notification\_filter\_prefix](#input\_s3\_event\_notification\_filter\_prefix) | S3 Path filter prefix for event notification. Limit the notifications to objects with key starting with specified characters | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | customization of tags to be assigned to all resources. <br/>always include 'product' default tag for resource-group proper functioning.<br/>can also make use of the [provider-level `default-tags`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#default_tags) | `map(string)` | <pre>{<br>  "product": "sysdig-secure-for-cloud"<br>}</pre> | no |

@@ -53,5 +53,7 @@ module "cloudtrail_s3_sns_sqs" {
   name               = "${var.name}-s3-sqs"
   cloudtrail_sns_arn = aws_sns_topic.s3_sns.arn
 
+  cloud_connector_cross_account_id = var.cloud_connector_cross_account_id
+
   tags = var.tags
 }
