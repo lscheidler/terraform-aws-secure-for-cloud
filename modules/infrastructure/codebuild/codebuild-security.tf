@@ -2,6 +2,8 @@ data "aws_region" "current" {}
 data "aws_caller_identity" "me" {}
 data "aws_partition" "current_partition" {}
 data "aws_ssm_parameter" "sysdig_secure_api_token" {
+  count = var.secure_api_token_secret_name != null ? 1 : 0
+
   name = var.secure_api_token_secret_name
 }
 
@@ -48,12 +50,35 @@ resource "aws_iam_role_policy" "read_parameters" {
   policy = data.aws_iam_policy_document.task_read_parameters.json
   role   = aws_iam_role.service.id
 }
+
 data "aws_iam_policy_document" "task_read_parameters" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "ssm:GetParameters"
-    ]
-    resources = [data.aws_ssm_parameter.sysdig_secure_api_token.arn]
+  dynamic "statement" {
+    for_each = local.permissions
+
+    content {
+      effect    = statement.value.effect
+      actions   = statement.value.actions
+      resources = statement.value.resources
+    }
   }
+}
+
+locals {
+  permissions = var.secure_api_token_secret_name != null ? [
+    {
+      effect = "Allow"
+      actions = [
+        "ssm:GetParameters"
+      ]
+      resources = [data.aws_ssm_parameter.sysdig_secure_api_token[0].arn]
+    }
+    ] : [
+    {
+      effect = "Allow"
+      actions = [
+        "secretsmaanger:GetSecretValue"
+      ]
+      resources = [var.secure_api_token_secret_arn]
+    }
+  ]
 }
