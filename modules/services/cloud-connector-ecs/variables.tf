@@ -66,6 +66,18 @@ variable "existing_cloudtrail_config" {
 # optionals - with default
 #---------------------------------
 
+variable "secure_api_token_secret_arn" {
+  type        = string
+  default     = null
+  description = "Sysdig Secure API token secretsmanager secret arn"
+}
+
+variable "secure_api_token_secret_key_name" {
+  type        = string
+  default     = null
+  description = "Sysdig Secure API token secretsmanager secret arn key name"
+}
+
 #
 # module composition
 #

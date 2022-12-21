@@ -38,7 +38,7 @@ resource "aws_ecs_task_definition" "task_definition" {
       secrets = [
         {
           name      = "SECURE_API_TOKEN"
-          valueFrom = var.secure_api_token_secret_name
+          valueFrom = local.secure_api_token_secret
         }
       ]
       portMappings = [
