@@ -73,7 +73,10 @@ data "aws_iam_policy_document" "iam_role_task_policy_s3" {
       "s3:GetObject",
       "s3:ListBucket"
     ]
-    resources = ["*"]
+    resources = var.existing_cloudtrail_config.cloudtrail_s3_arn != null ? [
+      var.existing_cloudtrail_config.cloudtrail_s3_arn,
+      "${var.existing_cloudtrail_config.cloudtrail_s3_arn}/*"
+    ] : ["*"]
     # resources = [var.cloudtrail_s3_arn # would need this as param]
   }
 }
@@ -206,32 +209,21 @@ data "aws_iam_policy_document" "task_read_parameters" {
 }
 
 locals {
-  permissions = concat(
-    var.secure_api_token_secret_name != null ? [
-      {
-        effect    = "Allow"
-        actions   = ["ssm:GetParameters"]
-        resources = [data.aws_ssm_parameter.sysdig_secure_api_token[0].arn]
-      }
-      ] : [
-      {
-        effect = "Allow"
-        actions = [
-          "secretsmanager:GetSecretValue"
-        ]
-        resources = [var.secure_api_token_secret_arn]
-      }
-    ],
-    var.existing_cloudtrail_config.cloudtrail_s3_arn != null ? [
-      {
-        effect = "Allow"
-        actions = [
-          "s3:GetObject"
-        ]
-        resources = ["${var.existing_cloudtrail_config.cloudtrail_s3_arn}/*"]
-      }
-    ] : []
-  )
+  permissions = var.secure_api_token_secret_name != null ? [
+    {
+      effect    = "Allow"
+      actions   = ["ssm:GetParameters"]
+      resources = [data.aws_ssm_parameter.sysdig_secure_api_token[0].arn]
+    }
+    ] : [
+    {
+      effect = "Allow"
+      actions = [
+        "secretsmanager:GetSecretValue"
+      ]
+      resources = [var.secure_api_token_secret_arn]
+    }
+  ]
 }
 
 
