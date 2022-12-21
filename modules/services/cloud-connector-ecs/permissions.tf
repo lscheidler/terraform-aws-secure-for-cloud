@@ -206,21 +206,32 @@ data "aws_iam_policy_document" "task_read_parameters" {
 }
 
 locals {
-  permissions = var.secure_api_token_secret_name != null ? [
-    {
-      effect    = "Allow"
-      actions   = ["ssm:GetParameters"]
-      resources = [data.aws_ssm_parameter.sysdig_secure_api_token[0].arn]
-    }
-    ] : [
-    {
-      effect = "Allow"
-      actions = [
-        "secretsmaanger:GetSecretValue"
-      ]
-      resources = [var.secure_api_token_secret_arn]
-    }
-  ]
+  permissions = concat(
+    var.secure_api_token_secret_name != null ? [
+      {
+        effect    = "Allow"
+        actions   = ["ssm:GetParameters"]
+        resources = [data.aws_ssm_parameter.sysdig_secure_api_token[0].arn]
+      }
+      ] : [
+      {
+        effect = "Allow"
+        actions = [
+          "secretsmanager:GetSecretValue"
+        ]
+        resources = [var.secure_api_token_secret_arn]
+      }
+    ],
+    var.existing_cloudtrail_config.cloudtrail_s3_arn != null ? [
+      {
+        effect = "Allow"
+        actions = [
+          "s3:GetObject"
+        ]
+        resources = ["${var.existing_cloudtrail_config.cloudtrail_s3_arn}/*"]
+      }
+    ] : []
+  )
 }
 
 
