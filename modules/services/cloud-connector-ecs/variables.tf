@@ -41,12 +41,14 @@ variable "existing_cloudtrail_config" {
   type = object({
     cloudtrail_sns_arn        = optional(string)
     cloudtrail_s3_arn         = optional(string)
+    cloudtrail_s3_kms_arn     = optional(string)
     cloudtrail_s3_sns_sqs_arn = optional(string)
     cloudtrail_s3_sns_sqs_url = optional(string)
   })
   default = {
     cloudtrail_sns_arn        = "create"
     cloudtrail_s3_arn         = null
+    cloudtrail_s3_kms_arn     = null
     cloudtrail_s3_sns_sqs_arn = null
     cloudtrail_s3_sns_sqs_url = null
   }
@@ -57,8 +59,9 @@ variable "existing_cloudtrail_config" {
     <ul>
       <li>cloudtrail_sns_arn: Optional 1. ARN of a cloudtrail-sns topic. If specified, deployment region must match Cloudtrail S3 bucket region</li>
       <li>cloudtrail_s3_arn: Optional 2. ARN of a cloudtrail s3 bucket. If specified, deployment region must match Cloudtrail S3 bucket region</li>
-      <li>cloudtrail_s3_sns_sqs_arn: Optional 3. ARN of the queue that will ingest events forwarded from an existing cloudtrail_s3_sns</li>
-      <li>cloudtrail_s3_sns_sqs_url: Optional 3. URL of the queue that will ingest events forwarded from an existing cloudtrail_s3_sns<br/>sqs:ReceiveMessage and sqs:DeleteMessage permissions have to be provided to the compute role</li>
+      <li>cloudtrail_s3_arn: Optional 3. ARN of a cloudtrail kms key. If specified, permission to ecs-connector is added</li>
+      <li>cloudtrail_s3_sns_sqs_arn: Optional 4. ARN of the queue that will ingest events forwarded from an existing cloudtrail_s3_sns</li>
+      <li>cloudtrail_s3_sns_sqs_url: Optional 4. URL of the queue that will ingest events forwarded from an existing cloudtrail_s3_sns<br/>sqs:ReceiveMessage and sqs:DeleteMessage permissions have to be provided to the compute role</li>
     </ul>
   EOT
 }

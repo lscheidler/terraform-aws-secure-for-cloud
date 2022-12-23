@@ -237,6 +237,17 @@ locals {
           "${var.existing_cloudtrail_config.cloudtrail_s3_arn}/*"
         ]
       }
+    ] : [],
+    var.existing_cloudtrail_config.cloudtrail_s3_kms_arn != null ? [
+      {
+        effect = "Allow"
+        actions = [
+          "kms:Decrypt",
+        ]
+        resources = [
+          var.existing_cloudtrail_config.cloudtrail_s3_kms_arn
+        ]
+      }
     ] : []
   )
 }
