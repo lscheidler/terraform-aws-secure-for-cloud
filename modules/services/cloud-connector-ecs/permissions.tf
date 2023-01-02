@@ -79,18 +79,18 @@ data "aws_iam_policy_document" "iam_role_task_policy_s3" {
     ] : ["*"]
     # resources = [var.cloudtrail_s3_arn # would need this as param]
   }
-  
+
   dynamic "statement" {
     for_each = var.existing_cloudtrail_config.cloudtrail_s3_kms_arn != null ? ["once"] : []
 
     content {
-        effect = "Allow"
-        actions = [
-          "kms:Decrypt",
-        ]
-        resources = [
-          var.existing_cloudtrail_config.cloudtrail_s3_kms_arn
-        ]
+      effect = "Allow"
+      actions = [
+        "kms:Decrypt",
+      ]
+      resources = [
+        var.existing_cloudtrail_config.cloudtrail_s3_kms_arn
+      ]
     }
   }
 }

@@ -141,6 +141,12 @@ variable "connector_ecs_task_role_name" {
   description = "Default ecs cloudconnector task role name"
 }
 
+variable "connector_logging" {
+  type        = string
+  default     = "info"
+  description = "Connector logging level."
+}
+
 variable "image" {
   type        = string
   default     = "quay.io/sysdig/cloud-connector:latest"
